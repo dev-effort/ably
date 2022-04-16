@@ -37,6 +37,7 @@
     "@typescript-eslint/no-var-requires": 0,
     "allowAfterThis": 0,
     "no-underscore-dangle": 0,
+    "@typescript-eslint/no-explicit-any": 0,
     "react/function-component-definition": [
       "error",
       {
