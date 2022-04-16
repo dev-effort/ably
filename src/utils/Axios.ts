@@ -50,6 +50,11 @@ class Axios {
     const response: any = await this.instance.put(url, data, config);
     return response;
   }
+
+  public async patch(url: string, data = {}, config = {}) {
+    const response: any = await this.instance.patch(url, data, config);
+    return response;
+  }
 }
 
 export default Axios;
