@@ -20,7 +20,6 @@ class Repository {
     params.append('password', dto.password);
 
     const result = await APIs.post('/login', params);
-    console.log('result', result);
 
     return result;
   }
