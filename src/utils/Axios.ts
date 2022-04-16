@@ -5,7 +5,7 @@ class Axios {
 
   constructor() {
     this.instance = axios.create();
-    this.instance.defaults.baseURL = 'https://ably-frontend-assignment-server.vercel.app/';
+    this.instance.defaults.baseURL = 'https://ably-frontend-assignment-server.vercel.app/api';
     this.instance.defaults.headers.common['Content-Type'] = 'applcation/json';
 
     this.instance.interceptors.response.use(
@@ -32,22 +32,22 @@ class Axios {
   }
 
   public async get(url: string, config = {}) {
-    const response = await this.instance.get(url, config);
+    const response: any = await this.instance.get(url, config);
     return response;
   }
 
   public async post(url: string, data = {}, config = {}) {
-    const response = await this.instance.post(url, data, config);
+    const response: any = await this.instance.post(url, data, config);
     return response;
   }
 
   public async delete(url: string, config = {}) {
-    const response = await this.instance.delete(url, config);
+    const response: any = await this.instance.delete(url, config);
     return response;
   }
 
   public async put(url: string, data = {}, config = {}) {
-    const response = await this.instance.put(url, data, config);
+    const response: any = await this.instance.put(url, data, config);
     return response;
   }
 }
