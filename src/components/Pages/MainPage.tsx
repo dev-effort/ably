@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled } from '@mui/material';
-import { Login, LogoutView } from '@components/Auth';
+import { Login, LogoutView, ReSettingPwVerify } from '@components/Auth';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { MyInfo } from '@components/MyInfo';
 import useStore from '@src/hooks/useStore';
@@ -24,6 +24,7 @@ const MainPage = () => {
         <Routes>
           <Route path="/" element={<Items />} />
           <Route path="/user" element={<MyInfo />} />
+          <Route path="/setting/repassword" element={<ReSettingPwVerify />} />
         </Routes>
       </BrowserRouter>
     </RootDiv>

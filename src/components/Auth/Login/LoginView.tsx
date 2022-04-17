@@ -8,9 +8,10 @@ import { validateEmailFormat } from '@utils/Utils';
 
 interface Props {
   onLogin: () => Promise<number>;
+  onClickChangePw: () => void;
 }
 
-const LoginView = ({ onLogin }: Props) => {
+const LoginView = ({ onLogin, onClickChangePw }: Props) => {
   const [open, setOpen] = useState<boolean>(false);
   const [isIdValid, setIdValid] = useState<boolean>(false);
   const [isPwEmpty, setPwEmpty] = useState<boolean>(false);
@@ -48,6 +49,11 @@ const LoginView = ({ onLogin }: Props) => {
     } else {
       setIsError(true);
     }
+  };
+
+  const handleClickChangePwBtn = () => {
+    onClickChangePw();
+    handleClose();
   };
 
   return (
@@ -92,7 +98,7 @@ const LoginView = ({ onLogin }: Props) => {
             로그인
           </SubmitBtn>
           <ErrorTextDiv>{isError ? `이메일 또는 비밀번호가 틀렸습니다` : ''}</ErrorTextDiv>
-          <PasswordChangeBtn>비밀번호 변경</PasswordChangeBtn>
+          <PasswordChangeBtn onClick={handleClickChangePwBtn}>비밀번호 변경</PasswordChangeBtn>
         </Box>
       </Modal>
     </div>

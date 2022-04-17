@@ -1,18 +1,21 @@
 import Repository from '@repository/Repository';
-import { LoginInDto, LogoutOutDto } from '@src/types';
+import { AuthCodeInDto, ConfirmTokenInDto, LoginInDto, LogoutOutDto } from '@src/types';
 import { getCookie, removeCookie, setCookie } from '@utils/cookie';
 import { makeAutoObservable } from 'mobx';
 
 class AuthStore {
-  private authCode: number;
+  private issueToken: string;
 
-  isLogin: boolean;
+  private confirmToken: string;
+
+  private isLogin: boolean;
 
   constructor() {
     makeAutoObservable(this);
 
-    this.authCode = -1;
+    this.issueToken = '';
     this.isLogin = this.getLogin();
+    this.confirmToken = '';
   }
 
   getLogin(): boolean {
@@ -24,16 +27,16 @@ class AuthStore {
     return this.isLogin;
   }
 
+  setConfirmToken(token: string) {
+    this.confirmToken = token;
+  }
+
   setLogin(status: boolean) {
     this.isLogin = status;
   }
 
-  setAuthCode(code: number) {
-    this.authCode = code;
-  }
-
-  getAuthCode() {
-    return this.authCode;
+  setAuthCode(code: string) {
+    this.issueToken = code;
   }
 
   async login(email: string, password: string): Promise<boolean> {
@@ -61,6 +64,37 @@ class AuthStore {
       return result;
     } catch (error) {
       console.error('logout fail');
+      throw error;
+    }
+  }
+
+  async sendAuthCode(email: string): Promise<number> {
+    try {
+      const getAuthCodeDto: AuthCodeInDto = {
+        email,
+      };
+
+      const result = await Repository.getAuthCode(getAuthCodeDto);
+      this.setAuthCode(result.issueToken);
+      return result.remainMillisecond;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async verifyAuthCode(email: string, authCode: string) {
+    try {
+      const postConfirmTokenDto: ConfirmTokenInDto = {
+        email,
+        authCode,
+        issueToken: this.issueToken,
+      };
+
+      const result = await Repository.postConfirmToken(postConfirmTokenDto);
+      this.setConfirmToken(result.confirmToken);
+    } catch (error) {
+      console.error(error);
       throw error;
     }
   }

@@ -26,7 +26,11 @@ const Login = () => {
     }
   };
 
-  return <LoginView onLogin={handleLogin} />;
+  const handleClickChangePw = () => {
+    nav('/setting/repassword');
+  };
+
+  return <LoginView onLogin={handleLogin} onClickChangePw={handleClickChangePw} />;
 };
 
 export default Login;
