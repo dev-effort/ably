@@ -36,12 +36,12 @@ storybook: 뷰를 재사용하기 위해 컴포넌트 단위로 개발하고자 
 # 프로젝트 폴더 구조와 설계의도
 
 프로젝트는
--component
--hooks
--repository
--stores
--utils
--stories
+- component
+- hooks
+- repository
+- stores
+- utils
+- stories
 로 구성되어있습니다.
 
 component에는 컴포넌트 단위로 개발된 컴포넌트와 페이지들이 들어있습니다.
@@ -68,9 +68,9 @@ utils에는 필요하다고 생각한 유틸함수들을 작성해두었습니�
 
 UI가 없어 단위 컴포넌트를 분석하여 공통 컴포넌트로 빼내는 중요한 컴포넌트 설계를 거의 하지 못했습니다.
 그래서 도메인 적인 단위의 컴포넌트로 구분하고자 하였고
--Auth
--MyInfo
--Pages
+- Auth
+- MyInfo
+- Pages
 로 구분하였습니다.
 
 로그인, 비밀번호 변경과 같은 관심사가 같다고 생각하여 Auth라는 패키지에 각 컴포넌트를 구현하였고
