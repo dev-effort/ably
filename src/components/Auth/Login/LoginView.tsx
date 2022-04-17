@@ -14,11 +14,17 @@ const LoginView = ({ onLogin }: Props) => {
   const [open, setOpen] = useState<boolean>(false);
   const [isIdValid, setIdValid] = useState<boolean>(false);
   const [isPwEmpty, setPwEmpty] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
 
-  const handleClose = () => {
+  const init = () => {
     setOpen(false);
     setPwEmpty(false);
     setIdValid(false);
+    setIsError(false);
+  };
+
+  const handleClose = () => {
+    init();
   };
 
   const handleClickBtn = () => setOpen(true);
@@ -39,6 +45,8 @@ const LoginView = ({ onLogin }: Props) => {
     const loginSucess = await onLogin();
     if (loginSucess === 200) {
       handleClose();
+    } else {
+      setIsError(true);
     }
   };
 
@@ -83,6 +91,7 @@ const LoginView = ({ onLogin }: Props) => {
           <SubmitBtn onClick={handleClickSubmitBtn} disabled={!(!isIdValid && isPwEmpty)}>
             로그인
           </SubmitBtn>
+          {isError && <ErrorTextDiv>이메일 또는 비밀번호가 틀렸습니다</ErrorTextDiv>}
         </Box>
       </Modal>
     </div>
@@ -126,6 +135,12 @@ const SubmitBtn = styled(Button)`
     border-color: #ccc;
     background-color: #ccc;
   }
+`;
+
+const ErrorTextDiv = styled('div')`
+  text-align: center;
+  margin: 1rem 0 0 0;
+  font-size: 12px;
 `;
 
 export default LoginView;

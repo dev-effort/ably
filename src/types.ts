@@ -47,3 +47,9 @@ export type UpdatePasswordInDto = {
 export type UpdatePasswordOutDto = {
   email: string;
 };
+
+export type UserInfo = {
+  name: string;
+  emailAddress: string;
+  profile: string;
+};
