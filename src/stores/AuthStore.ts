@@ -1,6 +1,7 @@
 import Repository from '@repository/Repository';
 import { LoginInDto } from '@src/types';
-import { getCookie, setCookie } from '@utils/cookie';
+import { getCookie, removeCookie, setCookie } from '@utils/cookie';
+import { observable } from 'mobx';
 
 interface AuthStoreType {
   authCode: number;
@@ -8,9 +9,11 @@ interface AuthStoreType {
   getAccessToken: () => string;
   setAuthCode: (code: number) => void;
   getAuthCode: () => number;
+  getIsLogin: () => boolean;
+  removeAccessToken: () => void;
 }
 
-const AuthStore: AuthStoreType = {
+const AuthStore = observable<AuthStoreType>({
   authCode: -1,
 
   async login(email: string, password: string): Promise<boolean> {
@@ -33,6 +36,10 @@ const AuthStore: AuthStoreType = {
     return getCookie('accessToken');
   },
 
+  removeAccessToken() {
+    removeCookie('accessToken');
+  },
+
   setAuthCode(code: number) {
     this.authCode = code;
   },
@@ -40,6 +47,10 @@ const AuthStore: AuthStoreType = {
   getAuthCode() {
     return this.authCode;
   },
-};
+
+  getIsLogin() {
+    return !!this.getAccessToken();
+  },
+});
 
 export default AuthStore;

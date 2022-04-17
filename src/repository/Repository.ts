@@ -32,9 +32,9 @@ class Repository {
     return result;
   }
 
-  public static async getUser(): Promise<UserOutDto> {
+  public static async getUser(accessToken: string): Promise<UserOutDto> {
     const result = await APIs.get('/user', {
-      headers: { Authorization: `Bearer ${getCookie('accessToken')}` },
+      headers: { Authorization: `Bearer ${accessToken}` },
     });
 
     return result;

@@ -1,19 +1,21 @@
 import React from 'react';
-import { styled } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import { Login } from '@components/Auth';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { MyInfo } from '@components/MyInfo';
+import useStore from '@src/hooks/useStore';
+import { useObserver } from 'mobx-react';
 import Items from './Items';
 
 const MainPage = () => {
-  return (
+  const { AuthStore } = useStore();
+
+  return useObserver(() => (
     <RootDiv>
       <BrowserRouter>
         <BannerDiv>
           ABLY 앱 설치하고 무료배송 혜택 받으세요
-          <LoginDiv>
-            <Login />
-          </LoginDiv>
+          <LoginDiv>{AuthStore.getIsLogin() ? <LogoutBtn>Logout</LogoutBtn> : <Login />} </LoginDiv>
         </BannerDiv>
         <Routes>
           <Route path="/" element={<Items />} />
@@ -21,7 +23,7 @@ const MainPage = () => {
         </Routes>
       </BrowserRouter>
     </RootDiv>
-  );
+  ));
 };
 
 const RootDiv = styled('div')`
@@ -45,6 +47,19 @@ const BannerDiv = styled('div')`
 
 const LoginDiv = styled('div')`
   margin: 0 0 0 18.5rem;
+`;
+
+const LogoutBtn = styled(Button)`
+  color: black;
+  border-radius: 3rem;
+  border-color: #ffffff;
+  background-color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  &:hover {
+    border-color: #ffffff;
+    background-color: #ffffff;
+  }
 `;
 
 export default MainPage;
