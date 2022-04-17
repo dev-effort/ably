@@ -1,20 +1,40 @@
 import Repository from '@repository/Repository';
-import { LoginInDto } from '@src/types';
+import { LoginInDto, LogoutOutDto } from '@src/types';
 import { getCookie, removeCookie, setCookie } from '@utils/cookie';
-import { observable } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 
-interface AuthStoreType {
-  authCode: number;
-  login: (email: string, password: string) => Promise<boolean>;
-  getAccessToken: () => string;
-  setAuthCode: (code: number) => void;
-  getAuthCode: () => number;
-  getIsLogin: () => boolean;
-  removeAccessToken: () => void;
-}
+class AuthStore {
+  private authCode: number;
 
-const AuthStore = observable<AuthStoreType>({
-  authCode: -1,
+  isLogin: boolean;
+
+  constructor() {
+    makeAutoObservable(this);
+
+    this.authCode = -1;
+    this.isLogin = this.getLogin();
+  }
+
+  getLogin(): boolean {
+    if (getCookie('accessToken')) {
+      this.isLogin = true;
+    } else {
+      this.isLogin = false;
+    }
+    return this.isLogin;
+  }
+
+  setLogin(status: boolean) {
+    this.isLogin = status;
+  }
+
+  setAuthCode(code: number) {
+    this.authCode = code;
+  }
+
+  getAuthCode() {
+    return this.authCode;
+  }
 
   async login(email: string, password: string): Promise<boolean> {
     const postLoginDto: LoginInDto = {
@@ -25,32 +45,27 @@ const AuthStore = observable<AuthStoreType>({
     try {
       const result = await Repository.postLogin(postLoginDto);
       setCookie('accessToken', result.accessToken);
+      this.setLogin(true);
       return true;
     } catch (error) {
       console.error('login fail');
       throw error;
     }
-  },
+  }
 
-  getAccessToken() {
-    return getCookie('accessToken');
-  },
+  async logout(): Promise<LogoutOutDto> {
+    try {
+      const result = await Repository.postLogout(getCookie('accessToken'));
+      removeCookie('accessToken');
+      this.setLogin(false);
+      return result;
+    } catch (error) {
+      console.error('logout fail');
+      throw error;
+    }
+  }
+}
 
-  removeAccessToken() {
-    removeCookie('accessToken');
-  },
+const store = new AuthStore();
 
-  setAuthCode(code: number) {
-    this.authCode = code;
-  },
-
-  getAuthCode() {
-    return this.authCode;
-  },
-
-  getIsLogin() {
-    return !!this.getAccessToken();
-  },
-});
-
-export default AuthStore;
+export default store;

@@ -11,5 +11,13 @@ export const getCookie = (key: string) => {
 };
 
 export const removeCookie = (key: string) => {
-  return cookies.remove(key);
+  cookies.remove(key);
+};
+
+export const getAccessToken = () => {
+  return cookies.get('accessToken');
+};
+
+export const removeAccessToken = () => {
+  cookies.remove('accessToken');
 };

@@ -1,7 +1,7 @@
 import Repository from '@repository/Repository';
 import { UserOutDto } from '@src/types';
 import { observable } from 'mobx';
-import AuthStore from './AuthStore';
+import { getAccessToken, removeAccessToken } from '@utils/cookie';
 
 interface UserStoreType {
   userCardInfo: UserOutDto | null;
@@ -15,13 +15,13 @@ const UserStore = observable<UserStoreType>({
   async getUserInfo(): Promise<UserOutDto> {
     try {
       if (this.userCardInfo === null) {
-        const result = await Repository.getUser(AuthStore.getAccessToken());
+        const result = await Repository.getUser(getAccessToken());
         this.userCardInfo = result;
         return result;
       }
       return this.userCardInfo;
     } catch (error) {
-      AuthStore.removeAccessToken();
+      removeAccessToken();
       console.error('getUserData fail');
       throw error;
     }
