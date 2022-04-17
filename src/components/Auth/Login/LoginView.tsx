@@ -91,7 +91,8 @@ const LoginView = ({ onLogin }: Props) => {
           <SubmitBtn onClick={handleClickSubmitBtn} disabled={!(!isIdValid && isPwEmpty)}>
             로그인
           </SubmitBtn>
-          {isError && <ErrorTextDiv>이메일 또는 비밀번호가 틀렸습니다</ErrorTextDiv>}
+          <ErrorTextDiv>{isError ? `이메일 또는 비밀번호가 틀렸습니다` : ''}</ErrorTextDiv>
+          <PasswordChangeBtn>비밀번호 변경</PasswordChangeBtn>
         </Box>
       </Modal>
     </div>
@@ -104,7 +105,7 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 300,
-  height: 200,
+  height: 225,
   bgcolor: 'background.paper',
   border: '1px solid #ffffff',
   boxShadow: 24,
@@ -135,12 +136,31 @@ const SubmitBtn = styled(Button)`
     border-color: #ccc;
     background-color: #ccc;
   }
+  &:hover {
+    border-color: black;
+    background-color: black;
+    color: #ffffff;
+  }
 `;
 
 const ErrorTextDiv = styled('div')`
   text-align: center;
   margin: 1rem 0 0 0;
   font-size: 12px;
+`;
+
+const PasswordChangeBtn = styled(Button)`
+  color: black;
+  border-radius: 3rem;
+  border-color: #ffffff;
+  background-color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  &:hover {
+    border-color: #ffffff;
+    background-color: #ffffff;
+  }
+  margin: 0 0 0 14rem;
 `;
 
 export default LoginView;
