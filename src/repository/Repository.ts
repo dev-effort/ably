@@ -11,7 +11,6 @@ import {
   UserOutDto,
 } from '@src/types';
 import APIs from '@utils/Axios';
-import { getCookie } from '@utils/cookie';
 
 class Repository {
   public static async postLogin(dto: LoginInDto): Promise<LoginOutDto> {
@@ -24,9 +23,9 @@ class Repository {
     return result;
   }
 
-  public static async postLogout(): Promise<LogoutOutDto> {
+  public static async postLogout(accessToken: string): Promise<LogoutOutDto> {
     const result = await APIs.post('/logout', undefined, {
-      headers: { Authorization: `Bearer ${getCookie('accessToken')}` },
+      headers: { Authorization: `Bearer ${accessToken}` },
     });
 
     return result;
