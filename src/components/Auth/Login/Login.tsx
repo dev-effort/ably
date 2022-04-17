@@ -1,11 +1,12 @@
 import React from 'react';
-import AuthStore from '@stores/AuthStore';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import useStore from '@src/hooks/useStore';
 import LoginView from './LoginView';
 
 const Login = () => {
   const nav = useNavigate();
+  const { AuthStore } = useStore();
 
   const handleLogin = async () => {
     const id = document.querySelector('.id')?.getElementsByTagName('input')[0].value as string;

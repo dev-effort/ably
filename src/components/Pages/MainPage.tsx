@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, styled } from '@mui/material';
-import { Login } from '@components/Auth';
+import { styled } from '@mui/material';
+import { Login, LogoutView } from '@components/Auth';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { MyInfo } from '@components/MyInfo';
 import useStore from '@src/hooks/useStore';
@@ -10,12 +10,16 @@ import Items from './Items';
 const MainPage = () => {
   const { AuthStore } = useStore();
 
+  const handleClickLogoutBtn = () => {
+    AuthStore.logout();
+  };
+
   return useObserver(() => (
     <RootDiv>
       <BrowserRouter>
         <BannerDiv>
           ABLY 앱 설치하고 무료배송 혜택 받으세요
-          <LoginDiv>{AuthStore.getIsLogin() ? <LogoutBtn>Logout</LogoutBtn> : <Login />} </LoginDiv>
+          <LoginDiv>{AuthStore.getLogin() ? <LogoutView onClick={handleClickLogoutBtn} /> : <Login />} </LoginDiv>
         </BannerDiv>
         <Routes>
           <Route path="/" element={<Items />} />
@@ -47,19 +51,6 @@ const BannerDiv = styled('div')`
 
 const LoginDiv = styled('div')`
   margin: 0 0 0 18.5rem;
-`;
-
-const LogoutBtn = styled(Button)`
-  color: black;
-  border-radius: 3rem;
-  border-color: #ffffff;
-  background-color: #ffffff;
-  font-size: 10px;
-  font-weight: 700;
-  &:hover {
-    border-color: #ffffff;
-    background-color: #ffffff;
-  }
 `;
 
 export default MainPage;
