@@ -6,6 +6,7 @@ import styled from '@emotion/styled';
 import Countdown from 'react-countdown';
 import useStore from '@src/hooks/useStore';
 import axios from 'axios';
+import ReSettingPw from './ReSettingPw';
 
 const ReSettingPwVerify = () => {
   const { AuthStore } = useStore();
@@ -16,6 +17,8 @@ const ReSettingPwVerify = () => {
   const [email, setEmail] = useState<string>('');
   const [authCode, setAuthCode] = useState<string>('');
   const [remainTime, setRemainTime] = useState<number>(0);
+  const [mode, setMode] = useState<boolean>(false);
+  const [authErrMsg, setAuthErrMsg] = useState<string>('');
 
   const handleChangeTextFiled = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (event.target.name === 'email') {
@@ -48,7 +51,9 @@ const ReSettingPwVerify = () => {
   const handleClickVerifyBtn = async () => {
     try {
       await AuthStore.verifyAuthCode(email, authCode);
+      setMode(true);
     } catch (error) {
+      setAuthErrMsg('잘못된 인증 코드입니다');
       console.error(error);
     }
   };
@@ -65,57 +70,62 @@ const ReSettingPwVerify = () => {
 
   return (
     <div style={{ margin: '2rem' }}>
-      <div>비밀번호 변경</div>
-      <EmailWrapper>
-        <TextFieldDiv>
-          <TextField
-            autoComplete="off"
-            error={isEmailFormatValid}
-            helperText={createHelperText()}
-            autoFocus
-            required
-            className="email"
-            id="email"
-            name="email"
-            type="email"
-            variant="standard"
-            placeholder="이메일 입력"
-            onChange={handleChangeTextFiled}
-            margin="normal"
-            fullWidth
-          />
-        </TextFieldDiv>
-        <Button onClick={handleClickEmailValidBtn}>인증 코드 발송</Button>
-      </EmailWrapper>
-      {emailValid ? (
-        <AuthCodeWrapper>
-          <TextFieldDiv>
-            <TextField
-              autoComplete="off"
-              error={isEmailFormatValid}
-              helperText={
+      {!mode ? (
+        <>
+          <div>비밀번호 변경</div>
+          <EmailWrapper>
+            <TextFieldDiv>
+              <TextField
+                autoComplete="off"
+                error={isEmailFormatValid}
+                helperText={createHelperText()}
+                autoFocus
+                required
+                className="email"
+                id="email"
+                name="email"
+                type="email"
+                variant="standard"
+                placeholder="이메일 입력"
+                onChange={handleChangeTextFiled}
+                margin="normal"
+                fullWidth
+              />
+            </TextFieldDiv>
+            <Button onClick={handleClickEmailValidBtn}>인증 코드 발송</Button>
+          </EmailWrapper>
+          {emailValid ? (
+            <AuthCodeWrapper>
+              <TextFieldDiv>
+                <TextField
+                  autoComplete="off"
+                  error={!mode}
+                  helperText={authErrMsg}
+                  autoFocus
+                  required
+                  className="authCode"
+                  id="authCode"
+                  name="authCode"
+                  type="text"
+                  variant="standard"
+                  placeholder="인증 코드 171009"
+                  onChange={handleChangeTextFiled}
+                  margin="normal"
+                  fullWidth
+                />
                 <Countdown
                   date={Date.now() + remainTime}
                   intervalDelay={1000}
                   renderer={props => <div>{`${props.minutes}:${props.seconds}`}</div>}
                 />
-              }
-              autoFocus
-              required
-              className="authCode"
-              id="authCode"
-              name="authCode"
-              type="text"
-              variant="standard"
-              placeholder="인증 코드 171009"
-              onChange={handleChangeTextFiled}
-              margin="normal"
-              fullWidth
-            />
-          </TextFieldDiv>
-          <Button onClick={handleClickVerifyBtn}>확인</Button>
-        </AuthCodeWrapper>
-      ) : null}
+              </TextFieldDiv>
+              <Button onClick={handleClickVerifyBtn}>확인</Button>
+            </AuthCodeWrapper>
+          ) : null}
+        </>
+      ) : (
+        <ReSettingPw />
+      )}
     </div>
   );
 };

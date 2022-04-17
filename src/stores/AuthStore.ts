@@ -1,5 +1,5 @@
 import Repository from '@repository/Repository';
-import { AuthCodeInDto, ConfirmTokenInDto, LoginInDto, LogoutOutDto } from '@src/types';
+import { AuthCodeInDto, ConfirmTokenInDto, LoginInDto, LogoutOutDto, UpdatePasswordInDto } from '@src/types';
 import { getCookie, removeCookie, setCookie } from '@utils/cookie';
 import { makeAutoObservable } from 'mobx';
 
@@ -10,12 +10,19 @@ class AuthStore {
 
   private isLogin: boolean;
 
+  private email: string;
+
   constructor() {
     makeAutoObservable(this);
 
     this.issueToken = '';
     this.isLogin = this.getLogin();
     this.confirmToken = '';
+    this.email = '';
+  }
+
+  setEmail(email: string) {
+    this.email = email;
   }
 
   getLogin(): boolean {
@@ -93,6 +100,22 @@ class AuthStore {
 
       const result = await Repository.postConfirmToken(postConfirmTokenDto);
       this.setConfirmToken(result.confirmToken);
+      this.setEmail(email);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async changePassword(newPassword: string, newPasswordConfirm: string) {
+    try {
+      const dto: UpdatePasswordInDto = {
+        confirmToken: this.confirmToken,
+        email: this.email,
+        newPassword,
+        newPasswordConfirm,
+      };
+      await Repository.updatePassword(dto);
     } catch (error) {
       console.error(error);
       throw error;

@@ -8,12 +8,7 @@ interface Props {
 }
 
 const MyInfoView = ({ emailAddress, name, profileImg }: Props) => {
-  return (
-    <>
-      <UserCardView emailAddress={emailAddress} name={name} profileImg={profileImg} />
-      <div>fasd</div>
-    </>
-  );
+  return <UserCardView emailAddress={emailAddress} name={name} profileImg={profileImg} />;
 };
 
 export default MyInfoView;
