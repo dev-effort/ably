@@ -1,46 +1,107 @@
-# Getting Started with Create React App
+# 프로젝트 실행 방법
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 실행환경
 
-## Available Scripts
+mac m1 monterey 12.3.1
+node v16.14.0
+크롬 100.0.4896.88
+vscode
 
-In the project directory, you can run:
+## 실행방법
 
-### `npm start`
+yarn install로 필요한 package들을 설치합니다.
+yarn start로 로컬환경으로 실행합니다. (http://localhost:3000)
+yarn storybook으로 컴포넌트를 확인 할 수 있습니다. (http://localhost:6006)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+# 주요 사용 라이브러리
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+mobx: 전역 스테이트를 관리하기 위해 사용했습니다. 예) 상단 GNB에 있는 login 버튼이 로그인 상태에 따라 login/logout 버튼을 mobx가 관리하는
+observable하고 있는 값으로 변경하고 있음.
 
-### `npm test`
+mui, emotion: css-in-js 스타일로 스타일링하면서 빠르게 컴포넌트들을 개발하기 위해 사용하였습니다.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+axios: fetch대신 사용했습니다. 코드의 중복을 줄이고자 공통적인 부분들을 설정하여 axios 인스턴스를 새로 만들어 사용했습니다.
+/src/utils/Axios.ts에 작성하였습니다.
 
-### `npm run build`
+react-cookie: 브라우저의 cookie에 accessToken를 key, value형태로 안전하게 저장하여 사용하기 위해 사용하였습니다.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+react-countdown: countdown 타이머를 구현한 컴포넌트입니다. 빠르게 구현하기 위해 구현된 컴포넌트를 가져와 사용했습니다.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+react-router-dom: BrowserRouter를 이용하여 라우팅을 구현하는데 사용했습니다.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+craco: 패키지 구조에서 파일들을 상대경로가 아닌 절대경로로 찾기 위해 사용했습니다.
 
-### `npm run eject`
+storybook: 뷰를 재사용하기 위해 컴포넌트 단위로 개발하고자 하였고 해당 컴포넌트 단위로 관리하고 테스트하기 위해 사용했습니다.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+# 프로젝트 폴더 구조와 설계의도
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+프로젝트는
+-component
+-hooks
+-repository
+-stores
+-utils
+-stories
+로 구성되어있습니다.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+component에는 컴포넌트 단위로 개발된 컴포넌트와 페이지들이 들어있습니다.
+hooks에는 커스텀훅이 있습니다.
+repository에는 rest api단위의 api들이 정의되어있습니다.
+stores에는 공통비지니스와 글로벌 스테이트를 관리하기 위한 store가 있습니다.
+utils에는 공통 util 함수들이 있습니다.
+stories에는 storybook의 파일들이 있습니다.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+크게 component - store - repository 의 관계로 구성되어있습니다. 관심사를 최대한 분리하였습니다.
 
-## Learn More
+repository는 서버와 api를 통해 통신을 하게됩니다. repository에는 어떠한 비지니스 로직이 존재하지 않습니다.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+component는 store를 통해 repository에서 가져온 데이터들의 공통의 비지니스 로직을 처리합니다.
+store에서 repository에서 가져온 데이터를 모델을 만들어 모델에 저장하는 부분까지 생각하였지만 시간관계상 스킵하였습니다.
+store는 mobx를 통해 observable 글로벌 스테이트를 관리도 하면서 공통 비지니스 로직을 담당하고 있습니다.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+component는 뷰를 재활용하기위한 단위로 설계되어 view와 view를 묶고있는 컴포넌트, 그리고 컴포넌트의 조합으로 페이지를 이루도록 설계하고자 노력했습니다.
+
+utils에는 필요하다고 생각한 유틸함수들을 작성해두었습니다.
+이메일의 포멧을 정규표현식으로 검사하는 로직이라던가 axios의 인스턴스를 생성하여 레포지토리에서 손쉽게 가져다 쓸 수 있도록 만든것, react-cookies를 좀더 편하게 쓰기위해 객체를 생성해두고 get, set, remove로만 사용하도록 만든 것등이 있습니다.
+
+# 컴포넌트 구조와 설계 의도
+
+UI가 없어 단위 컴포넌트를 분석하여 공통 컴포넌트로 빼내는 중요한 컴포넌트 설계를 거의 하지 못했습니다.
+그래서 도메인 적인 단위의 컴포넌트로 구분하고자 하였고
+-Auth
+-MyInfo
+-Pages
+로 구분하였습니다.
+
+로그인, 비밀번호 변경과 같은 관심사가 같다고 생각하여 Auth라는 패키지에 각 컴포넌트를 구현하였고
+MyInfo는 유저정보를 보여주는 카드 컴포넌트가 들어있고 해당 컴포넌트는 마이페이지에 있을 컴포넌트라 생각하여 MyInfo라는 패키지를 상위로 두었습니다.
+Pages에는 메인페이지를 두었고, 잘못된 경로의 404 페이지와 같은 페이지를 모아 두고자 만들었습니다.
+
+각 단위 컴포넌트에서 가장 중요하게 생각한것은 재사용가능하도록 컴포넌트를 설계하고자 하였고 재사용가능한 단위는 컴포넌트에 비지니스 로직이 없는 뷰와 뷰에 대한 로직만 있는 뷰 컴포넌트라고 생각했습니다.
+스토리보드를 사용한 이유도 이러한 뷰단위 컴포넌트로 설계하도록 생각하는데 도움을 주기 때문입니다.
+
+뷰를 구성하고 있는 컴포넌트들을 사용하고자 하는 곳에서는 해당 컴포넌트를 그대로 감싸서 비지니스적인 데이터로직을 처리하고 뷰에 데이터를 넘겨주는 컨테이너 컴포넌트를 만들어 사용할 수도 있고 여러 컴포넌트를 모아 거기서 직접 사용할수도 있는 방법이 있습니다.
+
+전자의 경우는 loginView.tsx와 login.tsx가 그 예이고 login.tsx를 MainPage.tsx가 가져가 사용하고 있습니다.
+후자의 경우는 UserCardView.tsx이고 MyInfoView.tsx가 직접 가져가 사용하고 있습니다.
+
+이번 과제에서 공통의 뷰컴포넌트를 잘 뽑아내지는 못한것 같고 이를 재활용 하는 모습도 잘 못보여드린것 같습니다.
+다만 이러한 의도로 컨테이너와 뷰 컴포넌트를 구분하여 설계하였다는 것을 강조하고싶습니다.
+
+# 상태관리의 구조와 설계 의도
+
+login 버튼이 페이지 전체를 아우르는 GNB에 존재하게되고 login/logout으로 상태가 변경되는 것이 login의 여부로 결정되게 되는데 이를 AuthStore에서 isLogin이라는 status로 observable한 값으로 관리하여 사용하였습니다.
+
+# 테스트 작성 의도와 목적
+
+jest를 활용한 컴포넌트 단위, fn단위의 단위 테스트를 시간관계상 작성하지 않았지만 대신 스토리북을 통해 컴포넌트의 모습과 control의 args등을 통해 직접 값을 변경해보며 컴포넌트가 동작하는 것을 통한 테스트를 작성하였습니다.
+스토리 북을 사용해보면서 간단한 컴포넌트 동작 테스트뿐만 아니라 협업간 컴포넌트를 직관적으로 이해하고 코드를 이해하는데 도움을 많이주어 사용하였습니다.
+
+# 기타 내용
+
+프로젝트 구조를 처음부터 잡는 과정이 회사에서는 몇몇 주요 인원들에 의해 만들어지거나 혹은 만들어진것을 가져다 쓰기만 해서 직접 경험하기 어렵고 한번 해두면 다신 할 일이 없어 기억에 가물가물 했던 것들을 이번 기회에 직접 해보면서 다시 되돌아보며 공부도 하고 많은 것들을 배우는 시간이였습니다. 옛날에 제품 기획단계부터 프로젝트 구조부터 처음부터 만들어보며 즐겁게 일했던 그 감정으로 3일간 재미있게 즐기며 했습니다. 기회를 주셔서 감사합니다.
+
+저는 코드는 살아있다고 생각합니다. 현재 제가 작성한 코드에 미진한 부분도 많지만 저의 가장 큰 강점은 계속 코드를 생각하고 끊임없이 리팩토링하여 살아있는 코드로서 점점 건강해지는 코드를 작성하는게 제 장점입니다.
+
+다음 기회가 주어진다면 최선을 다해 도전해보도록 하겠습니다.
+감사합니다.
